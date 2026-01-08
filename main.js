@@ -19,7 +19,7 @@ const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-// Controls for mobile & desktop
+// Controls - works immediately, no click required
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enablePan = false;
 controls.enableZoom = false;
@@ -40,7 +40,7 @@ const floor = new THREE.Mesh(
 floor.rotation.x = -Math.PI / 2;
 scene.add(floor);
 
-// Grid helper to see floor
+// Grid helper for visibility
 const grid = new THREE.GridHelper(50, 50);
 scene.add(grid);
 
@@ -70,22 +70,19 @@ scene.add(door);
 
 // Raycaster
 const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
 
-// Universal click/tap function
+// Tap/click interaction
 function interact(event) {
   let x, y;
-
   if (event.touches) {
-    // mobile touch
     x = event.touches[0].clientX;
     y = event.touches[0].clientY;
   } else {
-    // desktop click
     x = event.clientX;
     y = event.clientY;
   }
 
-  const pointer = new THREE.Vector2();
   pointer.x = (x / window.innerWidth) * 2 - 1;
   pointer.y = -(y / window.innerHeight) * 2 + 1;
 
@@ -102,7 +99,7 @@ function interact(event) {
   });
 }
 
-// Attach both click and touchstart
+// Add both click and touch listeners
 window.addEventListener('click', interact);
 window.addEventListener('touchstart', interact);
 
@@ -127,7 +124,7 @@ function enterBrainRot() {
   alert("🧠 You have entered the Brain Rot Wing.");
 }
 
-// Handle resize
+// Handle window resize
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
